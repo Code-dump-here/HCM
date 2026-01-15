@@ -30,9 +30,11 @@ export default function Game({ onGameOver }) {
 
   // Format stat change for display
   const formatChange = (value) => {
-    if (value >= 15) return '++';
+    if (value >= 11) return '+++';
+    if (value >= 6) return '++';
     if (value > 0) return '+';
-    if (value <= -15) return '--';
+    if (value <= -11) return '---';
+    if (value <= -6) return '--';
     if (value < 0) return '-';
     return '○';
   };
