@@ -264,44 +264,79 @@ export default function Game({ onGameOver }) {
   return (
     <div className="game-container">
       <div className="stats-panel">
-        <div className="turn-counter">Quyết sách: {turns}</div>
+        <div className="turn-counter" style={{ '--progress': `${(turns / 30) * 100}%` }}>
+          <span>Lượt {turns}/30</span>
+        </div>
+        
+        {/* Upcoming event warning */}
+        {[5, 10, 15, 20, 25].includes(turns + 1) && (
+          <div className="event-warning">
+            ⚠️ Sự kiện đặc biệt lượt {turns + 1}
+          </div>
+        )}
+        
         <div className="stats">
           <div className="stat">
-            <span>👥 Nhân dân</span>
-            <div className="stat-icon-container">
-              <div className="stat-icon-fill" style={{ height: `${stats.people}%` }}>
-                <span className="stat-icon">👥</span>
-              </div>
-              <span className="stat-icon stat-icon-bg">👥</span>
+            <div className="stat-label">
+              <span>👥 Nhân dân</span>
+              <span className={`stat-value ${stats.people <= 15 ? 'critical' : stats.people >= 80 ? 'excellent' : ''}`}>
+                {stats.people}{permanentPenalties.people > 0 && <span className="penalty">-{permanentPenalties.people}</span>}
+              </span>
+            </div>
+            <div className="stat-bar">
+              <div 
+                className={`stat-fill ${stats.people <= 15 ? 'critical' : stats.people >= 80 ? 'excellent' : ''}`}
+                style={{ width: `${stats.people}%` }}
+              />
             </div>
           </div>
           <div className="stat">
-            <span>🏛 Giai cấp</span>
-            <div className="stat-icon-container">
-              <div className="stat-icon-fill" style={{ height: `${stats.class}%` }}>
-                <span className="stat-icon">🏛</span>
-              </div>
-              <span className="stat-icon stat-icon-bg">🏛</span>
+            <div className="stat-label">
+              <span>🏛 Giai cấp</span>
+              <span className={`stat-value ${stats.class <= 15 ? 'critical' : stats.class >= 80 ? 'excellent' : ''}`}>
+                {stats.class}{permanentPenalties.class > 0 && <span className="penalty">-{permanentPenalties.class}</span>}
+              </span>
+            </div>
+            <div className="stat-bar">
+              <div 
+                className={`stat-fill ${stats.class <= 15 ? 'critical' : stats.class >= 80 ? 'excellent' : ''}`}
+                style={{ width: `${stats.class}%` }}
+              />
             </div>
           </div>
           <div className="stat">
-            <span>🧠 Tư tưởng</span>
-            <div className="stat-icon-container">
-              <div className="stat-icon-fill" style={{ height: `${stats.idea}%` }}>
-                <span className="stat-icon">🧠</span>
-              </div>
-              <span className="stat-icon stat-icon-bg">🧠</span>
+            <div className="stat-label">
+              <span>🧠 Tư tưởng</span>
+              <span className={`stat-value ${stats.idea <= 15 ? 'critical' : stats.idea >= 80 ? 'excellent' : ''}`}>
+                {stats.idea}{permanentPenalties.idea > 0 && <span className="penalty">-{permanentPenalties.idea}</span>}
+              </span>
+            </div>
+            <div className="stat-bar">
+              <div 
+                className={`stat-fill ${stats.idea <= 15 ? 'critical' : stats.idea >= 80 ? 'excellent' : ''}`}
+                style={{ width: `${stats.idea}%` }}
+              />
             </div>
           </div>
           <div className="stat">
-            <span>🌍 Quốc tế</span>
-            <div className="stat-icon-container">
-              <div className="stat-icon-fill" style={{ height: `${stats.intl}%` }}>
-                <span className="stat-icon">🌍</span>
-              </div>
-              <span className="stat-icon stat-icon-bg">🌍</span>
+            <div className="stat-label">
+              <span>🌍 Quốc tế</span>
+              <span className={`stat-value ${stats.intl <= 15 ? 'critical' : stats.intl >= 80 ? 'excellent' : ''}`}>
+                {stats.intl}{permanentPenalties.intl > 0 && <span className="penalty">-{permanentPenalties.intl}</span>}
+              </span>
+            </div>
+            <div className="stat-bar">
+              <div 
+                className={`stat-fill ${stats.intl <= 15 ? 'critical' : stats.intl >= 80 ? 'excellent' : ''}`}
+                style={{ width: `${stats.intl}%` }}
+              />
             </div>
           </div>
+        </div>
+        
+        {/* Decay info */}
+        <div className="decay-info">
+          📉 Suy giảm: -2/-2/-2/-3 mỗi lượt
         </div>
       </div>
 

@@ -42,10 +42,10 @@ export default function GameOver({ result, playerName, onRestart }) {
     <p className="small">Số lượt chơi: {result.turns}</p>
 
     <div className="stats">
-      <div className="stat"><span>👥 Nhân dân</span><span>{result.people}</span></div>
-      <div className="stat"><span>🏛 Giai cấp</span><span>{result.class}</span></div>
-      <div className="stat"><span>🧠 Tư tưởng</span><span>{result.idea}</span></div>
-      <div className="stat"><span>🌍 Quốc tế</span><span>{result.intl}</span></div>
+      <div className="stat"><span>👥 Nhân dân: </span><span>{result.people}</span></div>
+      <div className="stat"><span>🏛 Giai cấp: </span><span>{result.class}</span></div>
+      <div className="stat"><span>🧠 Tư tưởng: </span><span>{result.idea}</span></div>
+      <div className="stat"><span>🌍 Quốc tế: </span><span>{result.intl}</span></div>
     </div>
 
     <div className="divider" />
