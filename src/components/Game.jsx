@@ -1,7 +1,173 @@
 import { useState, useRef, useEffect } from "react";
 import { regularCards, turnBasedEvents, thresholdEvents } from "../data/cards";
+import {
+  UsersIcon,
+  BriefcaseIcon,
+  LightBulbIcon,
+  GlobeAltIcon,
+  ClockIcon,
+  ExclamationTriangleIcon,
+  HandThumbUpIcon,
+  HandThumbDownIcon
+} from '@heroicons/react/24/solid';
+import { motion, useMotionValue, useTransform, AnimatePresence } from "framer-motion";
 
 const clamp = (v) => Math.max(0, Math.min(100, v));
+
+// Stats Config
+const statConfig = {
+  people: { label: 'Nhân dân', icon: UsersIcon, color: '#2E7D32' },
+  class: { label: 'Giai cấp', icon: BriefcaseIcon, color: '#1976D2' },
+  idea: { label: 'Tư tưởng', icon: LightBulbIcon, color: '#FBC02D' },
+  intl: { label: 'Quốc tế', icon: GlobeAltIcon, color: '#7B1FA2' }
+};
+
+const getChangeColor = (value) => {
+  if (value > 0) return 'var(--success)';
+  if (value < 0) return 'var(--danger)';
+  return 'var(--text-muted)';
+};
+
+const formatChange = (value) => {
+  if (value > 0) return `+${value}`;
+  return value;
+};
+
+// Extracted Card Component to ensure fresh motion state for every card
+function DraggableCard({ card, onChoice }) {
+  const x = useMotionValue(0);
+  const rotate = useTransform(x, [-200, 200], [-30, 30]);
+  const opacityYes = useTransform(x, [50, 150], [0, 1]);
+  const opacityNo = useTransform(x, [-50, -150], [0, 1]);
+
+  const background = useTransform(
+    x,
+    [-200, 0, 200],
+    ["rgba(255, 0, 0, 0.05)", "rgba(255, 255, 255, 0.85)", "rgba(0, 255, 0, 0.05)"]
+  );
+
+  const handleDragEnd = (event, info) => {
+    const threshold = 100;
+    if (info.offset.x > threshold) {
+      onChoice(true);
+    } else if (info.offset.x < -threshold) {
+      onChoice(false);
+    }
+  };
+
+  return (
+    <motion.div
+      drag="x"
+      dragConstraints={{ left: 0, right: 0 }}
+      dragElastic={0.6}
+      onDragEnd={handleDragEnd}
+      style={{
+        x,
+        rotate,
+        background,
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        cursor: 'grab',
+        zIndex: 10
+      }}
+      initial={{ scale: 0.9, opacity: 0, y: 50 }}
+      animate={{ scale: 1, opacity: 1, y: 0 }}
+      exit={{
+        x: x.get() < 0 ? -500 : 500,
+        opacity: 0,
+        rotate: x.get() < 0 ? -45 : 45,
+        transition: { duration: 0.3 }
+      }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      className="card-panel"
+    >
+      <div style={{ padding: '2.5rem', height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <div style={{
+          textTransform: 'uppercase',
+          letterSpacing: '2px',
+          fontSize: '0.9rem',
+          color: 'var(--text-muted)',
+          marginBottom: '2rem',
+          borderBottom: '2px solid var(--accent-gold)',
+          paddingBottom: '0.5rem',
+          textAlign: 'center',
+          fontWeight: '700',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '0.5rem'
+        }}>
+          {card.icon && <card.icon style={{ width: '1.25rem', height: '1.25rem' }} />}
+          <span>{card.faction}</span>
+        </div>
+
+        <div style={{
+          flex: 1,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '1.4rem',
+          fontWeight: '600',
+          textAlign: 'center',
+          lineHeight: '1.5',
+          color: 'var(--text-main)',
+          pointerEvents: 'none'
+        }}>
+          "{card.text}"
+        </div>
+
+        {/* SWIPE OVERLAYS - CORRECTED ROTATION */}
+        <motion.div style={{
+          position: 'absolute', top: '2rem', right: '2rem', opacity: opacityYes,
+          border: '4px solid var(--success)', color: 'var(--success)',
+          padding: '0.5rem 1rem', borderRadius: '8px', fontWeight: '800', fontSize: '1.5rem', transform: 'rotate(15deg)'
+        }}>
+          ĐỒNG Ý
+        </motion.div>
+        <motion.div style={{
+          position: 'absolute', top: '2rem', left: '2rem', opacity: opacityNo,
+          border: '4px solid var(--danger)', color: 'var(--danger)',
+          padding: '0.5rem 1rem', borderRadius: '8px', fontWeight: '800', fontSize: '1.5rem', transform: 'rotate(-15deg)'
+        }}>
+          TỪ CHỐI
+        </motion.div>
+
+        <div style={{ marginTop: '2rem', pointerEvents: 'none' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
+            <span>TỪ CHỐI</span>
+            <span>ĐỒNG Ý</span>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', background: 'rgba(0,0,0,0.03)', padding: '1rem', borderRadius: 'var(--radius-sm)' }}>
+            <div style={{ textAlign: 'left' }}>
+              {Object.entries(card.no).map(([k, v]) => v !== 0 && (
+                <div key={k} style={{ color: getChangeColor(v), fontSize: '0.9rem', marginBottom: '4px' }}>
+                  {formatChange(v)} {statConfig[k].label}
+                </div>
+              ))}
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              {Object.entries(card.yes).map(([k, v]) => v !== 0 && (
+                <div key={k} style={{ color: getChangeColor(v), fontSize: '0.9rem', marginBottom: '4px' }}>
+                  {formatChange(v)} {statConfig[k].label}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div style={{ marginTop: '1rem', textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-muted)', opacity: 0.6 }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem' }}>
+            <HandThumbDownIcon className="icon-sm" />
+            <span>Kéo để chọn</span>
+            <HandThumbUpIcon className="icon-sm" />
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function Game({ onGameOver }) {
   const [stats, setStats] = useState({
@@ -14,391 +180,233 @@ export default function Game({ onGameOver }) {
   const [turns, setTurns] = useState(0);
   const [triggeredEvents, setTriggeredEvents] = useState(new Set());
   const [permanentPenalties, setPermanentPenalties] = useState({
-    people: 0,
-    class: 0,
-    idea: 0,
-    intl: 0
+    people: 0, class: 0, idea: 0, intl: 0
   });
   const [pendingPenaltyWarning, setPendingPenaltyWarning] = useState(null);
-  const [card, setCard] = useState(
-    regularCards[Math.floor(Math.random() * regularCards.length)]
-  );
 
-  const [tilt, setTilt] = useState("");
-  const [flying, setFlying] = useState("");
-  const startX = useRef(null);
+  // Ensure card has a unique key for AnimatePresence
+  const [card, setCard] = useState({
+    ...regularCards[Math.floor(Math.random() * regularCards.length)],
+    uniqueId: Math.random().toString()
+  });
 
-  // Format stat change for display
-  const formatChange = (value) => {
-    if (value >= 11) return '+++';
-    if (value >= 6) return '++';
-    if (value > 0) return '+';
-    if (value <= -11) return '---';
-    if (value <= -6) return '--';
-    if (value < 0) return '-';
-    return '○';
-  };
-
-  // Get color for stat change
-  const getChangeColor = (value) => {
-    if (value > 0) return '#2ecc71';
-    if (value < 0) return '#e74c3c';
-    return '#999';
-  };
-
-  // Apply stat decay - all stats naturally decrease over time
+  // Logic Helpers (Identical to before)
   const applyStatDecay = (currentStats, penalties) => {
     const decayed = { ...currentStats };
-    
-    // Each stat decays by 2-3 points per turn + permanent penalties
     decayed.people = clamp(decayed.people - 2 + penalties.people);
     decayed.class = clamp(decayed.class - 2 + penalties.class);
     decayed.idea = clamp(decayed.idea - 2 + penalties.idea);
     decayed.intl = clamp(decayed.intl - 3 + penalties.intl);
-    
     return decayed;
   };
 
-  // Apply linked stat penalties when stats get too extreme
   const applyLinkedPenalties = (currentStats) => {
     const penalized = { ...currentStats };
-    
-    // High Class (>75) causes People to suffer (elitism)
-    if (penalized.class > 75) {
-      penalized.people = clamp(penalized.people - 3);
-    }
-    
-    // High Idea (>75) with low People (<30) causes discontent
+    if (penalized.class > 75) penalized.people = clamp(penalized.people - 3);
     if (penalized.idea > 75 && penalized.people < 30) {
       penalized.people = clamp(penalized.people - 5);
       penalized.class = clamp(penalized.class - 3);
     }
-    
-    // High International (>75) with low Class (<30) = foreign dependency
     if (penalized.intl > 75 && penalized.class < 30) {
       penalized.class = clamp(penalized.class - 4);
       penalized.idea = clamp(penalized.idea - 3);
     }
-    
-    // High People (>75) with low Idea (<30) = populism without direction
     if (penalized.people > 75 && penalized.idea < 30) {
       penalized.idea = clamp(penalized.idea - 4);
       penalized.class = clamp(penalized.class - 3);
     }
-    
-    // Very extreme stats (>85) cause additional decay
     if (penalized.people > 85) penalized.people = clamp(penalized.people - 2);
     if (penalized.class > 85) penalized.class = clamp(penalized.class - 2);
     if (penalized.idea > 85) penalized.idea = clamp(penalized.idea - 2);
     if (penalized.intl > 85) penalized.intl = clamp(penalized.intl - 2);
-    
     return penalized;
   };
 
-  // Check for critical thresholds and apply permanent penalties
   const checkCriticalThresholds = (currentStats, currentPenalties) => {
     const newPenalties = { ...currentPenalties };
     const triggeredStats = [];
-    
-    // Critical low thresholds (<=15) - permanent -1 per turn penalty
-    if (currentStats.people <= 15 && newPenalties.people === 0) {
-      newPenalties.people = -1;
-      triggeredStats.push('👥 Nhân dân');
-    }
-    if (currentStats.class <= 15 && newPenalties.class === 0) {
-      newPenalties.class = -1;
-      triggeredStats.push('🏛 Giai cấp');
-    }
-    if (currentStats.idea <= 15 && newPenalties.idea === 0) {
-      newPenalties.idea = -1;
-      triggeredStats.push('🧠 Tư tưởng');
-    }
-    if (currentStats.intl <= 15 && newPenalties.intl === 0) {
-      newPenalties.intl = -1;
-      triggeredStats.push('🌍 Quốc tế');
-    }
-    
+    Object.keys(statConfig).forEach(key => {
+      if (currentStats[key] <= 15 && newPenalties[key] === 0) {
+        newPenalties[key] = -1;
+        triggeredStats.push(statConfig[key].label);
+      }
+    });
     return { penalties: newPenalties, triggered: triggeredStats };
   };
 
   const getNextCard = (currentTurns, currentStats, alreadyTriggered) => {
-    // Check for turn-based events first
     const turnEvent = turnBasedEvents.find(e => e.turn === currentTurns + 1);
-    if (turnEvent) {
-      return turnEvent;
-    }
+    if (turnEvent) return { ...turnEvent, uniqueId: Math.random().toString() };
 
-    // Check for threshold events that haven't been triggered yet
     for (const event of thresholdEvents) {
       if (!alreadyTriggered.has(event.id) && event.condition(currentStats)) {
-        return { ...event, isThresholdEvent: true };
+        return { ...event, isThresholdEvent: true, uniqueId: Math.random().toString() };
       }
     }
-
-    // Return random regular card
-    return regularCards[Math.floor(Math.random() * regularCards.length)];
+    return {
+      ...regularCards[Math.floor(Math.random() * regularCards.length)],
+      uniqueId: Math.random().toString()
+    };
   };
 
-  const resolveChoice = (agree) => {
-    if (flying) return; // Prevent interaction during animation
-
-    // If this is a penalty warning card, just continue to next card without incrementing turn
+  // Main Logic to Apply Choice
+  const handleChoice = (agree) => {
+    // 1. Check Penalty Warning
     if (card.isPenaltyWarning) {
-      setFlying(agree ? "flying-right" : "flying-left");
-      setTimeout(() => {
-        setPendingPenaltyWarning(null);
-        setCard(getNextCard(turns, stats, triggeredEvents));
-        setFlying("");
-      }, 500);
+      setPendingPenaltyWarning(null);
+      setCard(getNextCard(turns, stats, triggeredEvents));
       return;
     }
 
+    // 2. Calculate Stats
     const effects = agree ? card.yes : card.no;
     const newStats = { ...stats };
+    let failedStatKey = null;
 
     for (const key in effects) {
       newStats[key] = clamp(newStats[key] + effects[key]);
-      if (newStats[key] <= 0) {
-        setFlying(agree ? "flying-right" : "flying-left");
-        setTimeout(() => {
-          onGameOver(newStats, turns, false, key); // Pass failedStat
-        }, 500);
-        return;
-      }
+      if (newStats[key] <= 0) failedStatKey = key;
     }
 
-    setFlying(agree ? "flying-right" : "flying-left");
-    setTilt("");
+    // Immediate failure check
+    if (failedStatKey) {
+      onGameOver(newStats, turns, false, failedStatKey);
+      return;
+    }
 
-    setTimeout(() => {
-      const newTurns = turns + 1;
-      const newTriggered = new Set(triggeredEvents);
-      
-      // Check if player won by surviving to turn 30
-      if (newTurns >= 30) {
-        onGameOver(newStats, newTurns, true); // Pass true for victory
-        return;
-      }
-      
-      // Mark threshold event as triggered
-      if (card.isThresholdEvent) {
-        newTriggered.add(card.id);
-        setTriggeredEvents(newTriggered);
-      }
-      
-      // Check for critical thresholds and update permanent penalties
-      const { penalties: updatedPenalties, triggered: triggeredStats } = checkCriticalThresholds(newStats, permanentPenalties);
-      setPermanentPenalties(updatedPenalties);
-      
-      // Apply stat decay and linked penalties
-      let finalStats = applyStatDecay(newStats, updatedPenalties);
-      finalStats = applyLinkedPenalties(finalStats);
-      
-      // Check if any stat reached 0 after decay
-      if (finalStats.people <= 0 || finalStats.class <= 0 || 
-          finalStats.idea <= 0 || finalStats.intl <= 0) {
-        setStats(finalStats);
-        const failedStat = finalStats.people <= 0 ? 'people' :
-                          finalStats.class <= 0 ? 'class' :
-                          finalStats.idea <= 0 ? 'idea' : 'intl';
-        setTimeout(() => {
-          onGameOver(finalStats, newTurns, false, failedStat);
-        }, 300);
-        return;
-      }
-      
+    // 3. Update Game State (Turns, Decay, etc.)
+    const newTurns = turns + 1;
+    const newTriggered = new Set(triggeredEvents);
+
+    if (newTurns >= 30) {
+      onGameOver(newStats, newTurns, true);
+      return;
+    }
+
+    if (card.isThresholdEvent) {
+      newTriggered.add(card.id);
+      setTriggeredEvents(newTriggered);
+    }
+
+    const { penalties: updatedPenalties, triggered: triggeredStats } = checkCriticalThresholds(newStats, permanentPenalties);
+    setPermanentPenalties(updatedPenalties);
+
+    let finalStats = applyStatDecay(newStats, updatedPenalties);
+    finalStats = applyLinkedPenalties(finalStats);
+
+    // Check death after decay
+    const deadStat = Object.keys(finalStats).find(k => finalStats[k] <= 0);
+    if (deadStat) {
       setStats(finalStats);
-      setTurns(newTurns);
-      
-      // If permanent penalties were triggered, show warning card first
-      if (triggeredStats.length > 0) {
-        setCard({
-          isPenaltyWarning: true,
-          faction: "⚠️ Cảnh báo",
-          text: `${triggeredStats.join(', ')} đã đạt ngưỡng nguy hiểm! Bạn nhận phạt phạt vĩnh viễn: -1 điểm mỗi lượt.`,
-          yes: { people: 0, class: 0, idea: 0, intl: 0 },
-          no: { people: 0, class: 0, idea: 0, intl: 0 }
-        });
-      } else {
-        setCard(getNextCard(newTurns, finalStats, newTriggered));
-      }
-      
-      setFlying("");
-    }, 500);
+      setTimeout(() => onGameOver(finalStats, newTurns, false, deadStat), 300);
+      return;
+    }
+
+    setStats(finalStats);
+    setTurns(newTurns);
+
+    // 4. Set Next Card
+    if (triggeredStats.length > 0) {
+      setCard({
+        isPenaltyWarning: true,
+        faction: "⚠️ Cảnh báo",
+        text: `${triggeredStats.join(', ')} đã đạt ngưỡng nguy hiểm! Bạn nhận phạt vĩnh viễn: -1 điểm mỗi lượt.`,
+        yes: { people: 0, class: 0, idea: 0, intl: 0 },
+        no: { people: 0, class: 0, idea: 0, intl: 0 },
+        uniqueId: Math.random().toString()
+      });
+    } else {
+      setCard(getNextCard(newTurns, finalStats, newTriggered));
+    }
   };
-
-  const onPointerDown = (e) => {
-    startX.current = e.clientX;
-  };
-
-  useEffect(() => {
-    const handleMove = (e) => {
-      if (startX.current === null) return;
-      const diff = e.clientX - startX.current;
-
-      if (diff > 40) setTilt("tilt-right");
-      else if (diff < -40) setTilt("tilt-left");
-      else setTilt("");
-    };
-
-    const handleUp = (e) => {
-      if (startX.current === null) return;
-      const diff = e.clientX - startX.current;
-
-      if (diff > 80) resolveChoice(true);
-      else if (diff < -80) resolveChoice(false);
-
-      startX.current = null;
-      setTilt("");
-    };
-
-    document.addEventListener("pointermove", handleMove);
-    document.addEventListener("pointerup", handleUp);
-
-    return () => {
-      document.removeEventListener("pointermove", handleMove);
-      document.removeEventListener("pointerup", handleUp);
-    };
-  }, [card, stats, turns, triggeredEvents, flying]);
 
   return (
-    <div className="game-container">
-      <div className="stats-panel">
-        <div className="turn-counter" style={{ '--progress': `${(turns / 30) * 100}%` }}>
-          <span>Lượt {turns}/30</span>
+    <div className="container" style={{
+      display: 'grid',
+      gridTemplateColumns: 'minmax(300px, 1fr) minmax(350px, 450px)',
+      gap: '4rem',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100vh',
+      maxWidth: '1200px',
+      margin: '0 auto'
+    }}>
+
+      {/* LEFT: Stats Panel */}
+      <div className="card-panel" style={{
+        padding: '2rem',
+        height: '600px',
+        display: 'flex',
+        flexDirection: 'column'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem', background: 'var(--primary-red)', padding: '1rem', borderRadius: 'var(--radius-sm)', color: 'white' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <ClockIcon className="icon-md" />
+            <span style={{ fontWeight: '700', fontSize: '1.1rem' }}>Lượt {turns}/30</span>
+          </div>
+          <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Năm {1911 + turns}</div>
         </div>
-        
-        {/* Upcoming event warning */}
+
         {[5, 10, 15, 20, 25].includes(turns + 1) && (
-          <div className="event-warning">
-            ⚠️ Sự kiện đặc biệt lượt {turns + 1}
+          <div className="event-warning" style={{ marginBottom: '1.5rem' }}>
+            <ExclamationTriangleIcon className="icon-sm" style={{ display: 'inline', marginRight: 4 }} /> Sự kiện sắp tới
           </div>
         )}
-        
-        <div className="stats">
-          <div className="stat">
-            <div className="stat-label">
-              <span>👥 Nhân dân</span>
-              <span className={`stat-value ${stats.people <= 15 ? 'critical' : stats.people >= 80 ? 'excellent' : ''}`}>
-                {stats.people}{permanentPenalties.people > 0 && <span className="penalty">-{permanentPenalties.people}</span>}
-              </span>
-            </div>
-            <div className="stat-bar">
-              <div 
-                className={`stat-fill ${stats.people <= 15 ? 'critical' : stats.people >= 80 ? 'excellent' : ''}`}
-                style={{ width: `${stats.people}%` }}
-              />
-            </div>
-          </div>
-          <div className="stat">
-            <div className="stat-label">
-              <span>🏛 Giai cấp</span>
-              <span className={`stat-value ${stats.class <= 15 ? 'critical' : stats.class >= 80 ? 'excellent' : ''}`}>
-                {stats.class}{permanentPenalties.class > 0 && <span className="penalty">-{permanentPenalties.class}</span>}
-              </span>
-            </div>
-            <div className="stat-bar">
-              <div 
-                className={`stat-fill ${stats.class <= 15 ? 'critical' : stats.class >= 80 ? 'excellent' : ''}`}
-                style={{ width: `${stats.class}%` }}
-              />
-            </div>
-          </div>
-          <div className="stat">
-            <div className="stat-label">
-              <span>🧠 Tư tưởng</span>
-              <span className={`stat-value ${stats.idea <= 15 ? 'critical' : stats.idea >= 80 ? 'excellent' : ''}`}>
-                {stats.idea}{permanentPenalties.idea > 0 && <span className="penalty">-{permanentPenalties.idea}</span>}
-              </span>
-            </div>
-            <div className="stat-bar">
-              <div 
-                className={`stat-fill ${stats.idea <= 15 ? 'critical' : stats.idea >= 80 ? 'excellent' : ''}`}
-                style={{ width: `${stats.idea}%` }}
-              />
-            </div>
-          </div>
-          <div className="stat">
-            <div className="stat-label">
-              <span>🌍 Quốc tế</span>
-              <span className={`stat-value ${stats.intl <= 15 ? 'critical' : stats.intl >= 80 ? 'excellent' : ''}`}>
-                {stats.intl}{permanentPenalties.intl > 0 && <span className="penalty">-{permanentPenalties.intl}</span>}
-              </span>
-            </div>
-            <div className="stat-bar">
-              <div 
-                className={`stat-fill ${stats.intl <= 15 ? 'critical' : stats.intl >= 80 ? 'excellent' : ''}`}
-                style={{ width: `${stats.intl}%` }}
-              />
-            </div>
-          </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          {Object.entries(statConfig).map(([key, config]) => {
+            const Icon = config.icon;
+            const val = stats[key];
+            const pen = permanentPenalties[key];
+
+            return (
+              <div key={key}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '1rem', fontWeight: '600' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: val <= 15 ? 'var(--danger)' : 'var(--text-main)' }}>
+                    <Icon className="icon-sm" />
+                    {config.label}
+                  </div>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    {pen < 0 && <span style={{ color: 'var(--danger)', fontSize: '0.9rem' }}>{pen}</span>}
+                    <span>{val}</span>
+                  </div>
+                </div>
+                <div style={{ width: '100%', height: '10px', background: 'rgba(0,0,0,0.1)', borderRadius: '5px', overflow: 'hidden' }}>
+                  <div style={{
+                    width: `${val}%`,
+                    height: '100%',
+                    background: val <= 15 ? 'var(--danger)' : config.color,
+                    transition: 'width 0.5s ease'
+                  }} />
+                </div>
+              </div>
+            );
+          })}
         </div>
-        
-        {/* Decay info */}
-        <div className="decay-info">
-          📉 Suy giảm: -2/-2/-2/-3 mỗi lượt
+
+        <div style={{ marginTop: 'auto', textAlign: 'center', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+          "Dĩ bất biến, ứng vạn biến"
         </div>
       </div>
 
-      <div
-        className={`card ${tilt} ${flying}`}
-        onPointerDown={onPointerDown}
-      >
-        <div className="faction">{card.faction}</div>
-        <div className="text">{card.text}</div>
-
-        <div className="effects-preview">
-          <div className="effect-column left-effect">
-            <div className="effect-label">← Từ chối</div>
-            <div className="effect-changes">
-              <span style={{ color: getChangeColor(card.no.people) }}>
-                👥 {formatChange(card.no.people)}
-              </span>
-              <span style={{ color: getChangeColor(card.no.class) }}>
-                🏛 {formatChange(card.no.class)}
-              </span>
-              <span style={{ color: getChangeColor(card.no.idea) }}>
-                🧠 {formatChange(card.no.idea)}
-              </span>
-              <span style={{ color: getChangeColor(card.no.intl) }}>
-                🌍 {formatChange(card.no.intl)}
-              </span>
-            </div>
-          </div>
-          
-          <div className="effect-column right-effect">
-            <div className="effect-label">Đồng ý →</div>
-            <div className="effect-changes">
-              <span style={{ color: getChangeColor(card.yes.people) }}>
-                👥 {formatChange(card.yes.people)}
-              </span>
-              <span style={{ color: getChangeColor(card.yes.class) }}>
-                🏛 {formatChange(card.yes.class)}
-              </span>
-              <span style={{ color: getChangeColor(card.yes.idea) }}>
-                🧠 {formatChange(card.yes.idea)}
-              </span>
-              <span style={{ color: getChangeColor(card.yes.intl) }}>
-                🌍 {formatChange(card.yes.intl)}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div className="choice-hint">
-          <div
-          className="triangle left"
-          onDoubleClick={() => resolveChoice(false)}/>
-          <div
-          className="triangle right"
-          onDoubleClick={() => resolveChoice(true)}/>
-        </div>
-
-        <p className="small">
-          Kéo sang phải để đồng ý • Kéo sang trái để từ chối
-          Nhấn đúp vào góc để chọn nhanh
-        </p>
+      {/* CENTER: Main Card Area */}
+      <div style={{
+        height: '600px',
+        width: '100%',
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <AnimatePresence mode="wait">
+          <DraggableCard
+            key={card.uniqueId}
+            card={card}
+            onChoice={handleChoice}
+          />
+        </AnimatePresence>
       </div>
+
     </div>
   );
 }
