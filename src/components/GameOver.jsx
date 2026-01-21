@@ -5,10 +5,15 @@ import {
   UsersIcon,
   BriefcaseIcon,
   LightBulbIcon,
-  GlobeAltIcon
+  GlobeAltIcon,
+  TrophyIcon
 } from '@heroicons/react/24/solid';
+import { useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
+import Leaderboard from './Leaderboard';
 
 export default function GameOver({ result, playerName, onRestart }) {
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
   const isVictory = result.isVictory;
 
   const statConfig = {
@@ -109,7 +114,8 @@ export default function GameOver({ result, playerName, onRestart }) {
             alignItems: 'center',
             gap: '0.5rem',
             boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-            transition: 'transform 0.2s ease'
+            transition: 'transform 0.2s ease',
+            marginRight: '1rem'
           }}
           onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
           onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
@@ -117,7 +123,33 @@ export default function GameOver({ result, playerName, onRestart }) {
           <ArrowPathIcon className="icon-sm" />
           Phát động lại phong trào
         </button>
+
+        <button
+          onClick={() => setShowLeaderboard(true)}
+          style={{
+            background: 'var(--accent-gold)',
+            color: '#333',
+            padding: '1rem 2rem',
+            borderRadius: 'var(--radius-sm)',
+            fontSize: '1.1rem',
+            fontWeight: '600',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+            transition: 'transform 0.2s ease'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+          onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+        >
+          <TrophyIcon className="icon-sm" />
+          Bảng xếp hạng
+        </button>
       </div>
+
+      <AnimatePresence>
+        {showLeaderboard && <Leaderboard onClose={() => setShowLeaderboard(false)} />}
+      </AnimatePresence>
     </div>
   );
 }

@@ -47,3 +47,31 @@ export async function saveGameSession({
     return { success: false, error }
   }
 }
+
+// Function to fetch leaderboard
+export async function getLeaderboard(filterType = 'all', limit = 10) {
+  try {
+    let query = supabase
+      .from('game_sessions')
+      .select('*')
+      .order('turns_survived', { ascending: false })
+      .order('created_at', { ascending: false })
+      .limit(limit);
+
+    // Apply filters
+    if (filterType === 'victories') {
+      query = query.eq('is_victory', true);
+    } else if (filterType === 'defeats') {
+      query = query.eq('is_victory', false);
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+
+    return { success: true, data };
+  } catch (error) {
+    console.error('Error fetching leaderboard:', error);
+    return { success: false, error };
+  }
+}
