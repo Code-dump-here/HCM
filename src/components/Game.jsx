@@ -243,6 +243,7 @@ export default function Game({ onGameOver }) {
   const [showHistory, setShowHistory] = useState(false);
   const [feedback, setFeedback] = useState(null);
   const [achievements, setAchievements] = useState([]);
+  const [showAchievement, setShowAchievement] = useState(false);
 
   // Ensure card has a unique key for AnimatePresence
   const [card, setCard] = useState({
@@ -336,6 +337,8 @@ export default function Game({ onGameOver }) {
     
     if (newAchievements.length > achievements.length) {
       setAchievements(newAchievements);
+      setShowAchievement(true);
+      setTimeout(() => setShowAchievement(false), 3000);
     }
   };
 
@@ -407,24 +410,8 @@ export default function Game({ onGameOver }) {
     };
     setDecisionHistory(prev => [decision, ...prev].slice(0, 10)); // Keep last 10
     
-    // Show feedback screen
-    setFeedback({
-      choice: agree ? 'Đồng ý' : 'Từ chối',
-      effects,
-      card: card.faction,
-      statChanges: Object.keys(effects).map(k => ({
-        stat: statConfig[k].label,
-        change: effects[k],
-        from: stats[k],
-        to: finalStats[k]
-      }))
-    });
-    
     // Check achievements
     checkAchievements(finalStats, newTurns);
-
-    // Hide feedback after 2 seconds
-    setTimeout(() => setFeedback(null), 2000);
 
     // 4. Set Next Card
     if (triggeredStats.length > 0) {
@@ -552,10 +539,10 @@ export default function Game({ onGameOver }) {
                 {feedback.choice === 'yes' ? '✓ ĐỒNG Ý' : '✗ TỪ CHỐI'}
               </div>
               <div style={{ fontSize: '0.95rem', color: 'var(--text-muted)', marginBottom: '1.5rem', textAlign: 'center', fontStyle: 'italic' }}>
-                "{feedback.cardTitle}"
+                "{feedback.card}"
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                {Object.entries(feedback.changes).map(([key, value]) => value !== 0 && (
+                {Object.entries(feedback.effects || {}).map(([key, value]) => value !== 0 && (
                   <div key={key} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem' }}>
                     <span>{statConfig[key].label}</span>
                     <span style={{ color: value > 0 ? 'var(--success)' : 'var(--danger)', fontWeight: '700' }}>
@@ -568,96 +555,9 @@ export default function Game({ onGameOver }) {
           )}
         </AnimatePresence>
 
-        {/* Decision History Button */}
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setShowHistory(!showHistory)}
-          style={{
-            position: 'absolute',
-            bottom: '1rem',
-            right: '1rem',
-            background: 'var(--primary-red)',
-            color: 'white',
-            border: 'none',
-            padding: '0.75rem 1.5rem',
-            borderRadius: 'var(--radius-sm)',
-            cursor: 'pointer',
-            fontSize: '0.9rem',
-            fontWeight: '700',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-            zIndex: 50
-          }}
-        >
-          <ClockIcon className="icon-sm" />
-          LỊCH SỬ ({decisionHistory.length})
-        </motion.button>
-
-        {/* Decision History Panel */}
-        <AnimatePresence>
-          {showHistory && (
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 50 }}
-              style={{
-                position: 'absolute',
-                top: 0,
-                right: '-350px',
-                width: '320px',
-                height: '100%',
-                background: 'white',
-                borderRadius: 'var(--radius-md)',
-                boxShadow: '-5px 0 20px rgba(0,0,0,0.1)',
-                padding: '1.5rem',
-                overflowY: 'auto',
-                zIndex: 60
-              }}
-            >
-              <div style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '1rem', color: 'var(--primary-red)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <ClockIcon className="icon-sm" />
-                LỊCH SỬ QUYẾT ĐỊNH
-              </div>
-              {decisionHistory.length === 0 ? (
-                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textAlign: 'center', marginTop: '2rem' }}>
-                  Chưa có quyết định nào
-                </div>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  {[...decisionHistory].reverse().map((decision, idx) => (
-                    <div key={idx} style={{
-                      padding: '1rem',
-                      background: 'rgba(0,0,0,0.03)',
-                      borderRadius: 'var(--radius-sm)',
-                      borderLeft: `4px solid ${decision.choice === 'yes' ? 'var(--success)' : 'var(--danger)'}`
-                    }}>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>
-                        Lượt {decision.turn}
-                      </div>
-                      <div style={{ fontSize: '0.85rem', fontWeight: '600', marginBottom: '0.5rem' }}>
-                        {decision.choice === 'yes' ? '✓' : '✗'} {decision.cardTitle}
-                      </div>
-                      <div style={{ fontSize: '0.75rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                        {Object.entries(decision.changes).map(([key, value]) => value !== 0 && (
-                          <span key={key} style={{ color: value > 0 ? 'var(--success)' : 'var(--danger)' }}>
-                            {statConfig[key].label}: {value > 0 ? '+' : ''}{value}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-
         {/* Achievement Notification */}
         <AnimatePresence>
-          {achievements.length > 0 && achievements[achievements.length - 1] && (
+          {showAchievement && achievements.length > 0 && achievements[achievements.length - 1] && (
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -726,5 +626,7 @@ export default function Game({ onGameOver }) {
       </div>
 
     </div>
+    
   );
+  
 }
