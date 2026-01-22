@@ -56,33 +56,51 @@ const formatChange = (value) => {
 // Achievement Definitions
 const achievementDefs = [
   {
-    id: 'pacifist',
-    name: 'Hòa bình',
-    desc: 'Không tổng động viên chiến tranh ở lượt 20',
-    icon: '🕊️'
+    id: 'great_unity',
+    name: 'Đại đoàn kết',
+    desc: 'Giữ tất cả chỉ số trên 60 đến lượt 15',
+    icon: '🤝'
   },
   {
-    id: 'peoples_champion',
-    name: 'Người của dân',
-    desc: 'Giữ Nhân dân trên 70 đến lượt 15',
-    icon: '👥'
+    id: 'peoples_hero',
+    name: 'Anh hùng dân tộc',
+    desc: 'Đoàn kết dân tộc đạt 80+ ở lượt 20',
+    icon: '⭐'
   },
   {
-    id: 'balanced_leader',
-    name: 'Lãnh đạo cân bằng',
-    desc: 'Tất cả chỉ số trong khoảng 10 điểm ở lượt 15',
+    id: 'class_solidarity',
+    name: 'Công-nông liên minh',
+    desc: 'Nội bộ vững mạnh đạt 75+ ở lượt 18',
+    icon: '✊'
+  },
+  {
+    id: 'international_comrade',
+    name: 'Chiến hữu quốc tế',
+    desc: 'Đoàn kết quốc tế đạt 70+ ở lượt 22',
+    icon: '🌏'
+  },
+  {
+    id: 'balanced_path',
+    name: 'Con đường cân bằng',
+    desc: 'Tất cả chỉ số trong khoảng 15 điểm ở lượt 20',
     icon: '⚖️'
   },
   {
     id: 'survivor',
-    name: 'Người sống sót',
-    desc: 'Sống sót đến lượt 25',
-    icon: '🎖️'
+    name: 'Chiến thắng lịch sử',
+    desc: 'Vượt qua 30 lượt chiến đấu',
+    icon: '🏆'
   },
   {
-    id: 'ideologist',
-    name: 'Nhà tư tưởng',
-    desc: 'Giữ Tư tưởng trên 80 đến lượt 20',
+    id: 'steadfast_leader',
+    name: 'Lãnh đạo kiên định',
+    desc: 'Không có chỉ số nào giảm xuống dưới 20 đến lượt 25',
+    icon: '🛡️'
+  },
+  {
+    id: 'ideological_beacon',
+    name: 'Ngọn đuốc tư tưởng',
+    desc: 'Lý tưởng thống nhất đạt 85+ ở lượt 15',
     icon: '💡'
   }
 ];
@@ -314,25 +332,55 @@ export default function Game({ onGameOver }) {
   const checkAchievements = (currentStats, currentTurns) => {
     const newAchievements = [...achievements];
     
-    if (currentTurns === 20 && !achievements.includes('pacifist') && card.turn !== 20) {
-      newAchievements.push('pacifist');
+    // Great Unity - all stats above 60 at turn 15
+    if (currentTurns === 15 && !achievements.includes('great_unity')) {
+      if (currentStats.people >= 60 && currentStats.class >= 60 && 
+          currentStats.idea >= 60 && currentStats.intl >= 60) {
+        newAchievements.push('great_unity');
+      }
     }
-    if (currentTurns === 15 && currentStats.people >= 70 && !achievements.includes('peoples_champion')) {
-      newAchievements.push('peoples_champion');
+    
+    // People's Hero - people stat 80+ at turn 20
+    if (currentTurns === 20 && currentStats.people >= 80 && !achievements.includes('peoples_hero')) {
+      newAchievements.push('peoples_hero');
     }
-    if (currentTurns === 15 && !achievements.includes('balanced_leader')) {
+    
+    // Class Solidarity - class stat 75+ at turn 18
+    if (currentTurns === 18 && currentStats.class >= 75 && !achievements.includes('class_solidarity')) {
+      newAchievements.push('class_solidarity');
+    }
+    
+    // International Comrade - intl stat 70+ at turn 22
+    if (currentTurns === 22 && currentStats.intl >= 70 && !achievements.includes('international_comrade')) {
+      newAchievements.push('international_comrade');
+    }
+    
+    // Balanced Path - all stats within 15 points at turn 20
+    if (currentTurns === 20 && !achievements.includes('balanced_path')) {
       const values = Object.values(currentStats);
       const max = Math.max(...values);
       const min = Math.min(...values);
-      if (max - min <= 10) {
-        newAchievements.push('balanced_leader');
+      if (max - min <= 15) {
+        newAchievements.push('balanced_path');
       }
     }
-    if (currentTurns === 25 && !achievements.includes('survivor')) {
+    
+    // Survivor - survive 30 turns (victory)
+    if (currentTurns === 30 && !achievements.includes('survivor')) {
       newAchievements.push('survivor');
     }
-    if (currentTurns === 20 && currentStats.idea >= 80 && !achievements.includes('ideologist')) {
-      newAchievements.push('ideologist');
+    
+    // Steadfast Leader - no stat below 20 until turn 25
+    if (currentTurns === 25 && !achievements.includes('steadfast_leader')) {
+      if (currentStats.people >= 20 && currentStats.class >= 20 && 
+          currentStats.idea >= 20 && currentStats.intl >= 20) {
+        newAchievements.push('steadfast_leader');
+      }
+    }
+    
+    // Ideological Beacon - idea stat 85+ at turn 15
+    if (currentTurns === 15 && currentStats.idea >= 85 && !achievements.includes('ideological_beacon')) {
+      newAchievements.push('ideological_beacon');
     }
     
     if (newAchievements.length > achievements.length) {
