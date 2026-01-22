@@ -14,31 +14,31 @@ import { motion, useMotionValue, useTransform, AnimatePresence } from "framer-mo
 
 const clamp = (v) => Math.max(0, Math.min(100, v));
 
-// Stats Config with educational descriptions
+// Stats Config with educational descriptions - Unity & Solidarity focused
 const statConfig = {
   people: { 
-    label: 'Nhân dân', 
+    label: 'Đoàn kết dân tộc', 
     icon: UsersIcon, 
     color: '#2E7D32',
-    desc: 'Ủng hộ của quần chúng nhân dân. "Dân là gốc nước" - không thể cách mạng mà thiếu dân.'
+    desc: 'Đoàn kết các giai tầng, tôn giáo, dân tộc. "Đoàn kết là sức mạnh vô địch" - Bác Hồ.'
   },
   class: { 
-    label: 'Giai cấp', 
+    label: 'Nội bộ vững mạnh', 
     icon: BriefcaseIcon, 
     color: '#1976D2',
-    desc: 'Sức mạnh công nhân-nông dân. Lực lượng nòng cốt của cách mạng Việt Nam.'
+    desc: 'Sự gắn kết nội bộ giữa công-nông-trí. Đảm bảo sức mạnh từ bên trong.'
   },
   idea: { 
-    label: 'Tư tưởng', 
+    label: 'Lý tưởng thống nhất', 
     icon: LightBulbIcon, 
     color: '#FBC02D',
-    desc: 'Nhận thức chính trị và tư tưởng Mác-Lênin. Kim chỉ nam cho mọi hành động.'
+    desc: 'Mục tiêu chung: Độc lập, tự do, hạnh phúc. "Không có gì quý hơn độc lập tự do."'
   },
   intl: { 
-    label: 'Quốc tế', 
+    label: 'Đoàn kết quốc tế', 
     icon: GlobeAltIcon, 
     color: '#7B1FA2',
-    desc: 'Quan hệ và ủng hộ quốc tế. "Chủ nghĩa quốc tế là sức mạnh to lớn."'
+    desc: 'Liên kết với phong trào giải phóng thế giới. "Đoàn kết quốc tế là sức mạnh to lớn."'
   }
 };
 
@@ -452,7 +452,7 @@ export default function Game({ onGameOver }) {
             <ClockIcon className="icon-md" />
             <span style={{ fontWeight: '700', fontSize: '1.1rem' }}>Lượt {turns}/30</span>
           </div>
-          <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Năm {1911 + turns}</div>
+          <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Năm {1941 + turns}</div>
         </div>
 
         {[5, 10, 15, 20, 25].includes(turns + 1) && (

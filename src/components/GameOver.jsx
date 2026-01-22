@@ -17,40 +17,40 @@ export default function GameOver({ result, playerName, onRestart }) {
   const isVictory = result.isVictory;
 
   const statConfig = {
-    people: { label: 'Nhân dân', icon: UsersIcon, color: '#2E7D32' },
-    class: { label: 'Giai cấp', icon: BriefcaseIcon, color: '#1976D2' },
-    idea: { label: 'Tư tưởng', icon: LightBulbIcon, color: '#FBC02D' },
-    intl: { label: 'Quốc tế', icon: GlobeAltIcon, color: '#7B1FA2' }
+    people: { label: 'Đoàn kết dân tộc', icon: UsersIcon, color: '#2E7D32' },
+    class: { label: 'Nội bộ vững mạnh', icon: BriefcaseIcon, color: '#1976D2' },
+    idea: { label: 'Lý tưởng thống nhất', icon: LightBulbIcon, color: '#FBC02D' },
+    intl: { label: 'Đoàn kết quốc tế', icon: GlobeAltIcon, color: '#7B1FA2' }
   };
 
   const getFailureMessage = () => {
     if (result.people <= 0) {
       return {
-        title: "Mất lòng dân",
-        message: "\"Dân là gốc nước. Gốc vững thì nước bền.\" - Bác Hồ. Bạn đã quên rằng sức mạnh của cách mạng xuất phát từ quần chúng nhân dân. Không có sự ủng hộ của nhân dân, không thể có thắng lợi nào."
+        title: "Mất đoàn kết dân tộc",
+        message: "\"Đoàn kết, đoàn kết, đại đoàn kết. Thành công, thành công, đại thành công.\" - Bác Hồ. Bạn đã không thể đoàn kết các tầng lớp nhân dân, các dân tộc, tôn giáo. Không có đại đoàn kết, không thể có thắng lợi."
       };
     }
     if (result.class <= 0) {
       return {
-        title: "Giai cấp suy yếu",
-        message: "\"Đoàn kết, đoàn kết, đại đoàn kết. Thành công, thành công, đại thành công.\" Giai cấp công nhân và nông dân là nền tảng của cách mạng. Thiếu đoàn kết giai cấp, đất nước sẽ suy yếu."
+        title: "Nội bộ tan rã",
+        message: "\"Trong đoàn kết là sức mạnh, ngoài đoàn kết là thất bại.\" Nội bộ công-nông-trí thức tan rã. Khi mất gắn kết nội bộ, cách mạng không thể tiến lên."
       };
     }
     if (result.idea <= 0) {
       return {
-        title: "Tư tưởng lung lay",
-        message: "\"Không có gì quý hơn độc lập tự do.\" Tư tưởng là kim chỉ nam cho hành động. Khi mất phương hướng tư tưởng, cách mạng sẽ lạc lối và thất bại."
+        title: "Mất lý tưởng chung",
+        message: "\"Không có gì quý hơn độc lập tự do.\" Khi không còn lý tưởng chung, nhân dân sẽ lạc lối. Mục tiêu thống nhất là cội nguồn của mọi đoàn kết."
       };
     }
     if (result.intl <= 0) {
       return {
         title: "Cô lập quốc tế",
-        message: "\"Đoàn kết quốc tế là sức mạnh to lớn.\" Một đất nước cô lập không thể đứng vững. Cần có sự hợp tác và đoàn kết với các lực lượng tiến bộ trên thế giới."
+        message: "\"Đoàn kết quốc tế là sức mạnh to lớn.\" Một dân tộc nhỏ bé không thể đứng vững nếu cô lập. Cần liên kết với phong trào giải phóng dân tộc và các lực lượng tiến bộ thế giới."
       };
     }
     return {
       title: "Thất bại",
-      message: "Đoàn kết toàn dân là nền tảng của mọi thắng lợi."
+      message: "Đoàn kết toàn dân tộc và quốc tế là nền tảng của mọi thắng lợi."
     };
   };
 
