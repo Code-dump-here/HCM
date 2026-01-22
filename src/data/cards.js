@@ -36,128 +36,128 @@ const regularCards = [
     faction: "Công-Nông",
     icon: HandRaisedIcon,
     text: "Công nhân và nông dân đề xuất liên minh lao động. Hỗ trợ?",
-    yes: { people: +12, class: +9, idea: -5, intl: -7 },
-    no: { people: -7, class: -8, idea: +5, intl: +6 }
+    yes: { people: +11, class: +8, idea: -6, intl: -8 },
+    no: { people: -8, class: -9, idea: +4, intl: +5 }
   },
   {
     faction: "Dân tộc thiểu số",
     icon: UserGroupIcon,
     text: "Đồng bào Tày-Nùng muốn tham gia chính quyền. Chấp nhận?",
-    yes: { people: +12, class: -5, idea: +7, intl: -6 },
-    no: { people: -10, class: +6, idea: -7, intl: +5 }
+    yes: { people: +11, class: -6, idea: +6, intl: -7 },
+    no: { people: -11, class: +5, idea: -8, intl: +4 }
   },
   {
     faction: "Công giáo",
     icon: BookOpenIcon,
     text: "Giáo dân xin đoàn kết cùng cách mạng. Hợp tác?",
-    yes: { people: +12, class: -6, idea: -7, intl: +8 },
-    no: { people: -8, class: +5, idea: +6, intl: -7 }
+    yes: { people: +11, class: -7, idea: -8, intl: +7 },
+    no: { people: -9, class: +4, idea: +5, intl: -8 }
   },
   {
     faction: "Phật giáo",
     icon: HeartIcon,
     text: "Tăng ni đề xuất 'Hòa thượng yêu nước'. Ủng hộ?",
-    yes: { people: +11, class: -5, idea: +6, intl: -6 },
-    no: { people: -9, class: +6, idea: -5, intl: +5 }
+    yes: { people: +10, class: -6, idea: +5, intl: -7 },
+    no: { people: -10, class: +5, idea: -6, intl: +4 }
   },
   {
     faction: "Trí thức",
     icon: AcademicCapIcon,
     text: "Giới trí thức yêu nước muốn tham gia Việt Minh. Mời?",
-    yes: { people: +11, class: -7, idea: +12, intl: -5 },
-    no: { people: -6, class: +6, idea: -8, intl: +7 }
+    yes: { people: +10, class: -8, idea: +11, intl: -6 },
+    no: { people: -7, class: +5, idea: -9, intl: +6 }
   },
   {
     faction: "Phụ nữ",
     icon: UsersIcon,
     text: "Hội Phụ nữ đề nghị vai trò lãnh đạo. Hỗ trợ?",
-    yes: { people: +12, class: +7, idea: -5, intl: -6 },
-    no: { people: -8, class: -6, idea: +5, intl: +6 }
+    yes: { people: +11, class: +6, idea: -6, intl: -7 },
+    no: { people: -9, class: -7, idea: +4, intl: +5 }
   },
   {
     faction: "Liên Xô",
     icon: GlobeAltIcon,
     text: "Liên Xô đề nghị huấn luyện quân sự. Chấp nhận?",
-    yes: { people: -5, class: +6, idea: -7, intl: +12 },
-    no: { people: +6, class: -5, idea: +8, intl: -10 }
+    yes: { people: -6, class: +5, idea: -8, intl: +11 },
+    no: { people: +5, class: -6, idea: +7, intl: -11 }
   },
   {
     faction: "Trung Quốc",
     icon: GlobeAmericasIcon,
     text: "Trung Quốc gửi viện trợ lương thực. Tiếp nhận?",
-    yes: { people: +7, class: -5, idea: -6, intl: +12 },
-    no: { people: -5, class: +6, idea: +7, intl: -9 }
+    yes: { people: +6, class: -6, idea: -7, intl: +11 },
+    no: { people: -6, class: +5, idea: +6, intl: -10 }
   },
   {
     faction: "Cuba",
     icon: FireIcon,
     text: "Cuba yêu cầu hỗ trợ kinh nghiệm cách mạng. Giúp?",
-    yes: { people: +5, class: -6, idea: +7, intl: +12 },
-    no: { people: -4, class: +5, idea: -6, intl: -10 }
+    yes: { people: +4, class: -7, idea: +6, intl: +11 },
+    no: { people: -5, class: +4, idea: -7, intl: -11 }
   },
   {
     faction: "Algeria",
     icon: ShieldCheckIcon,
     text: "Mặt trận Algeria xin ủng hộ. Tuyên bố hỗ trợ?",
-    yes: { people: +6, class: -5, idea: +8, intl: +11 },
-    no: { people: -5, class: +6, idea: -7, intl: -9 }
+    yes: { people: +5, class: -6, idea: +7, intl: +10 },
+    no: { people: -6, class: +5, idea: -8, intl: -10 }
   },
   {
     faction: "Hội nghị Bandung",
     icon: LinkIcon,
     text: "Tham gia phong trào không liên kết. Đồng ý?",
-    yes: { people: +7, class: -6, idea: +6, intl: +12 },
-    no: { people: -6, class: +7, idea: -5, intl: -10 }
+    yes: { people: +6, class: -7, idea: +5, intl: +11 },
+    no: { people: -7, class: +6, idea: -6, intl: -11 }
   },
   {
     faction: "Văn nghệ sĩ",
     icon: MusicalNoteIcon,
     text: "Văn nghệ sĩ cả nước muốn đại đoàn kết. Tổ chức?",
-    yes: { people: +12, class: -5, idea: +9, intl: -6 },
-    no: { people: -7, class: +5, idea: -7, intl: +6 }
+    yes: { people: +11, class: -6, idea: +8, intl: -7 },
+    no: { people: -8, class: +4, idea: -8, intl: +5 }
   },
   {
     faction: "Thanh niên",
     icon: UsersIcon,
     text: "Lập đoàn thanh niên đại đoàn kết. Ủng hộ?",
-    yes: { people: +11, class: +8, idea: -6, intl: -6 },
-    no: { people: -7, class: -6, idea: +6, intl: +5 }
+    yes: { people: +10, class: +7, idea: -7, intl: -7 },
+    no: { people: -8, class: -7, idea: +5, intl: +4 }
   },
   {
     faction: "Đảng viên",
     icon: BriefcaseIcon,
     text: "Mở rộng đảng, thu hút nhiều thành phần. Đồng ý?",
-    yes: { people: +12, class: +7, idea: -7, intl: -5 },
-    no: { people: -8, class: -6, idea: +8, intl: +6 }
+    yes: { people: +11, class: +6, idea: -8, intl: -6 },
+    no: { people: -9, class: -7, idea: +7, intl: +5 }
   },
   {
     faction: "Hoa kiều",
     icon: UserGroupIcon,
     text: "Hoa kiều yêu nước muốn góp sức. Chào đón?",
-    yes: { people: +10, class: -6, idea: +6, intl: +9 },
-    no: { people: -7, class: +5, idea: -6, intl: -8 }
+    yes: { people: +9, class: -7, idea: +5, intl: +8 },
+    no: { people: -8, class: +4, idea: -7, intl: -9 }
   },
   // Positive unity events
   {
     faction: "Mặt trận",
     icon: LinkIcon,
     text: "Lập Mặt trận Việt Minh đại đoàn kết dân tộc!",
-    yes: { people: +12, class: +11, idea: +8, intl: -6 },
-    no: { people: -8, class: -7, idea: -6, intl: +7 }
+    yes: { people: +11, class: +10, idea: +7, intl: -7 },
+    no: { people: -9, class: -8, idea: -7, intl: +6 }
   },
   {
     faction: "Quốc tế",
     icon: GlobeAltIcon,
     text: "Tổ chức hội nghị đoàn kết quốc tế châu Á-Phi!",
-    yes: { people: +8, class: -6, idea: +9, intl: +12 },
-    no: { people: -6, class: +5, idea: -7, intl: -10 }
+    yes: { people: +7, class: -7, idea: +8, intl: +11 },
+    no: { people: -7, class: +4, idea: -8, intl: -11 }
   },
   {
     faction: "Đoàn kết",
     icon: HandRaisedIcon,
     text: "\"Đoàn kết, đoàn kết, đại đoàn kết!\" Phát động?",
-    yes: { people: +12, class: +10, idea: +8, intl: -5 },
-    no: { people: -7, class: -6, idea: -6, intl: +6 }
+    yes: { people: +11, class: +9, idea: +7, intl: -6 },
+    no: { people: -8, class: -7, idea: -7, intl: +5 }
   }
 ];
 
@@ -169,40 +169,40 @@ const turnBasedEvents = [
     faction: "Cách mạng tháng 8",
     icon: CalendarDaysIcon,
     text: "1945: Cơ hội giành chính quyền! Tổng khởi nghĩa toàn dân?",
-    yes: { people: +12, class: +10, idea: +9, intl: -7 },
-    no: { people: -10, class: -9, idea: -8, intl: +8 }
+    yes: { people: +11, class: +9, idea: +8, intl: -8 },
+    no: { people: -11, class: -10, idea: -9, intl: +7 }
   },
   {
     turn: 8,
     faction: "Kháng chiến toàn dân",
     icon: HandRaisedIcon,
     text: "1948: \"Già, trẻ, gái, trai đều kháng chiến!\" Phát động?",
-    yes: { people: +12, class: +12, idea: +9, intl: -6 },
-    no: { people: -10, class: -9, idea: -7, intl: +7 }
+    yes: { people: +11, class: +11, idea: +8, intl: -7 },
+    no: { people: -11, class: -10, idea: -8, intl: +6 }
   },
   {
     turn: 13,
     faction: "Hội nghị Geneva",
     icon: GlobeAltIcon,
     text: "1954: Đề xuất hòa bình Geneva. Đoàn kết quốc tế ủng hộ?",
-    yes: { people: +8, class: -6, idea: +7, intl: +12 },
-    no: { people: -6, class: +7, idea: -6, intl: -11 }
+    yes: { people: +7, class: -7, idea: +6, intl: +11 },
+    no: { people: -7, class: +6, idea: -7, intl: -12 }
   },
   {
     turn: 18,
     faction: "Miền Nam",
     icon: LinkIcon,
     text: "1959: Đồng bào miền Nam kêu gọi giải phóng. Ủng hộ?",
-    yes: { people: +12, class: +9, idea: -6, intl: -8 },
-    no: { people: -10, class: -7, idea: +6, intl: +8 }
+    yes: { people: +11, class: +8, idea: -7, intl: -9 },
+    no: { people: -11, class: -8, idea: +5, intl: +7 }
   },
   {
     turn: 25,
     faction: "Phong trào quốc tế",
     icon: GlobeAmericasIcon,
     text: "1966: Thế giới phản chiến ủng hộ VN. Kêu gọi mạnh?",
-    yes: { people: +9, class: -6, idea: +8, intl: +12 },
-    no: { people: -6, class: +7, idea: -6, intl: -10 }
+    yes: { people: +8, class: -7, idea: +7, intl: +11 },
+    no: { people: -7, class: +6, idea: -7, intl: -11 }
   }
 ];
 
@@ -214,8 +214,8 @@ const thresholdEvents = [
     faction: "Quần chúng",
     icon: UsersIcon,
     text: "Nhân dân hân hoan ủng hộ. Có nên tổ chức lễ kỷ niệm lớn?",
-    yes: { people: +5, class: -5, idea: +12, intl: -7 },
-    no: { people: -2, class: +7, idea: -7, intl: +10 }
+    yes: { people: +4, class: -6, idea: +11, intl: -8 },
+    no: { people: -3, class: +6, idea: -8, intl: +9 }
   },
   {
     id: "people_discontent",
@@ -223,8 +223,8 @@ const thresholdEvents = [
     faction: "Bất mãn",
     icon: FaceFrownIcon,
     text: "Dân chúng bất bình. Cần có hành động khẩn cấp!",
-    yes: { people: +15, class: -7, idea: +5, intl: -5 },
-    no: { people: -5, class: +10, idea: -3, intl: +6 }
+    yes: { people: +14, class: -8, idea: +4, intl: -6 },
+    no: { people: -6, class: +9, idea: -4, intl: +5 }
   },
   {
     id: "class_solidarity",
@@ -232,8 +232,8 @@ const thresholdEvents = [
     faction: "Giai cấp",
     icon: BriefcaseIcon,
     text: "Giai cấp công nhân đoàn kết vững mạnh. Mở rộng quyền lợi?",
-    yes: { people: +9, class: +12, idea: -4, intl: -7 },
-    no: { people: -5, class: -7, idea: +7, intl: +10 }
+    yes: { people: +8, class: +11, idea: -5, intl: -8 },
+    no: { people: -6, class: -8, idea: +6, intl: +9 }
   },
   {
     id: "class_struggle",
@@ -241,8 +241,8 @@ const thresholdEvents = [
     faction: "Khủng hoảng",
     icon: ExclamationTriangleIcon,
     text: "Giai cấp công nhân yếu thế. Tăng cường tuyên truyền?",
-    yes: { people: -5, class: +15, idea: +7, intl: -7 },
-    no: { people: +7, class: -5, idea: -4, intl: +10 }
+    yes: { people: -6, class: +14, idea: +6, intl: -8 },
+    no: { people: +6, class: -6, idea: -5, intl: +9 }
   },
   {
     id: "ideological_peak",
@@ -250,8 +250,8 @@ const thresholdEvents = [
     faction: "Tư tưởng",
     icon: LightBulbIcon,
     text: "Nhận thức chính trị cao. Xuất bản sách lý luận?",
-    yes: { people: -4, class: +9, idea: +12, intl: -7 },
-    no: { people: +7, class: -5, idea: -7, intl: +10 }
+    yes: { people: -5, class: +8, idea: +11, intl: -8 },
+    no: { people: +6, class: -6, idea: -8, intl: +9 }
   },
   {
     id: "ideological_crisis",
@@ -259,8 +259,8 @@ const thresholdEvents = [
     faction: "Giáo dục",
     icon: AcademicCapIcon,
     text: "Tư tưởng yếu kém. Mở lớp học tập khẩn cấp?",
-    yes: { people: -7, class: +7, idea: +15, intl: -5 },
-    no: { people: +10, class: -5, idea: -5, intl: +6 }
+    yes: { people: -8, class: +6, idea: +14, intl: -6 },
+    no: { people: +9, class: -6, idea: -6, intl: +5 }
   },
   {
     id: "international_support",
@@ -268,8 +268,8 @@ const thresholdEvents = [
     faction: "Quốc tế",
     icon: GlobeAltIcon,
     text: "Được quốc tế ủng hộ mạnh. Tổ chức hội nghị lớn?",
-    yes: { people: +9, class: -5, idea: -7, intl: +12 },
-    no: { people: -4, class: +7, idea: +10, intl: -7 }
+    yes: { people: +8, class: -6, idea: -8, intl: +11 },
+    no: { people: -5, class: +6, idea: +9, intl: -8 }
   },
   {
     id: "isolated",
@@ -277,8 +277,8 @@ const thresholdEvents = [
     faction: "Cô lập",
     icon: LockClosedIcon,
     text: "Bị cô lập quốc tế. Tìm kiếm đồng minh mới?",
-    yes: { people: -5, class: -7, idea: +7, intl: +15 },
-    no: { people: +7, class: +10, idea: -5, intl: -5 }
+    yes: { people: -6, class: -8, idea: +6, intl: +14 },
+    no: { people: +6, class: +9, idea: -6, intl: -6 }
   },
   {
     id: "balanced_state",
@@ -292,8 +292,8 @@ const thresholdEvents = [
     faction: "Cân bằng",
     icon: ScaleIcon,
     text: "Đất nước phát triển cân đối hoàn hảo. Tiếp tục duy trì?",
-    yes: { people: +8, class: +8, idea: +8, intl: +8 },
-    no: { people: -12, class: -12, idea: -12, intl: -12 }
+    yes: { people: +7, class: +7, idea: +7, intl: +7 },
+    no: { people: -13, class: -13, idea: -13, intl: -13 }
   }
 ];
 
